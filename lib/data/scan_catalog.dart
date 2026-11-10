@@ -1,0 +1,201 @@
+import 'guides.dart';
+
+const extraScanItems = <GuideItem>[
+  GuideItem(
+    name: 'الكبدة',
+    kind: GuideKind.food,
+    level: SafetyLevel.red,
+    note: 'الكبدة ومنتجاتها، زي الباتيه وكبدة الفراخ، فيها فيتامين A بكميات عالية. في الحمل بينصح بتجنبها. لو اتأكلت مرة بالغلط، منغيرش العادة، وكمّلي المتابعة مع طبيبك.',
+    aliases: ['كبدة', 'كبده', 'كبد', 'كبدة فراخ', 'كبده فراخ', 'كبدة إسكندراني', 'باتيه', 'liver', 'pate'],
+  ),
+  GuideItem(
+    name: 'الفراخ واللحمة المستوية',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'الفراخ واللحمة والكفتة بعد الاستواء الكامل أكل طبيعي في الحمل. أي جزء لسه ناي أو زهري يتستوى الأول.',
+    aliases: ['فراخ', 'دجاج', 'لحمة', 'لحم', 'كفتة', 'chicken', 'beef'],
+  ),
+  GuideItem(
+    name: 'الجمبري المطبوخ',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'الجمبري المستوي كويس عادةً مناسب. الجمبري النيء أو اللي ريحته متغيرة لأ.',
+    aliases: ['جمبري', 'جنبري', 'shrimp'],
+  ),
+  GuideItem(
+    name: 'عيش وأرز ومكرونة',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'الخبز والأرز والمكرونة أكل يومي عادي. الكمية حسب جوعك وخطة طبيبك، مش حسب صور الناس.',
+    aliases: ['عيش', 'خبز', 'أرز', 'رز', 'مكرونة', 'مكرونه', 'bread', 'rice', 'pasta'],
+  ),
+  GuideItem(
+    name: 'الفول والعدس والحمص',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'الفول والعدس والحمص والطعمية المستوية أكل مناسب. الطعمية تتاكل سخنة ومستوية من جوه.',
+    aliases: ['فول', 'عدس', 'حمص', 'طعمية', 'فلافل', 'falafel'],
+  ),
+  GuideItem(
+    name: 'الخضار',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'الخيار والطماطم والخس والسبانخ والملوخية والبروكلي والجزر، بعد الغسل أو التسوية، جزء كويس من الأكل.',
+    aliases: ['خيار', 'طماطم', 'خس', 'سبانخ', 'ملوخية', 'بروكلي', 'جزر', 'كوسة', 'باذنجان'],
+  ),
+  GuideItem(
+    name: 'البلح والعسل',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'البلح والعسل مناسبين للأم في العادة. العسل ما يتدّاش للرضيع بعد الولادة، وده موضوع تاني. لو فيه سكري حمل، الكمية تتظبط مع الطبيب.',
+    aliases: ['بلح', 'تمر', 'عسل', 'honey', 'dates'],
+  ),
+  GuideItem(
+    name: 'المكسرات',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'اللوز وعين الجمل والفول السوداني مناسبة لو مفيش حساسية. الزبدة الخام من غير تحميص كويس اتأكدي من مصدرها.',
+    aliases: ['مكسرات', 'لوز', 'عين جمل', 'فول سوداني', 'nuts', 'almond'],
+  ),
+  GuideItem(
+    name: 'النعناع',
+    kind: GuideKind.food,
+    level: SafetyLevel.green,
+    note: 'النعناع في الأكل أو كوب شاي خفيف عادةً مناسب. زيت النعناع المركز أو كميات علاجية لأ من غير الطبيب.',
+    aliases: ['نعناع', 'mint'],
+  ),
+  GuideItem(
+    name: 'التونة',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'تونة العلب الصغيرة عادةً بكميات محدودة. التونة الكبيرة الطازة أعلى في الزئبق. خليها مش كل يوم، والكمية يأكدها الطبيب.',
+    aliases: ['تونة', 'تونه', 'tuna'],
+  ),
+  GuideItem(
+    name: 'الشوكولاتة',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'الشوكولاتة فيها كافيين وسكر. القطعة العادية غير مشروب الطاقة. لو كتير على معدتك أو عندكِ سكري حمل، قلليها.',
+    aliases: ['شوكولاتة', 'شوكولاته', 'chocolate', 'كاكاو'],
+  ),
+  GuideItem(
+    name: 'المشروبات الغازية',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'الكولا والغازيات فيها سكر، وبعضها كافيين. مش ممنوعة قطرة، بس مش شرب يومي يعوّض المية.',
+    aliases: ['بيبسي', 'كولا', 'بيبسى', 'سفن', 'pepsi', 'cola', 'soda'],
+  ),
+  GuideItem(
+    name: 'مشروبات الطاقة',
+    kind: GuideKind.food,
+    level: SafetyLevel.red,
+    note: 'مشروبات الطاقة مركّزة في الكافيين ومش مناسبة للحمل. القهوة المحدودة غير العلبة دي.',
+    aliases: ['ريد بول', 'مشروب طاقة', 'redbull', 'energy drink'],
+  ),
+  GuideItem(
+    name: 'اللحوم المصنعة',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'البسطرمة واللانشون والهوت دوج والسوسيس تتسخّن لحد ما تبقى سخنة بجد، مش تتاكل ساقعة من العلبة. حتى كده خليها مش أساس الأكل.',
+    aliases: ['بسطرمة', 'لانشون', 'هوت دوج', 'سوسيس', 'سلامي'],
+  ),
+  GuideItem(
+    name: 'المايونيز',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'المايونيز المعلب المبستر غير المايونيز البيتي من بيض نيء. البيتي والنيء يتجنب. لو مش مكتوب مبستر، سيبيه.',
+    aliases: ['مايونيز', 'mayo'],
+  ),
+  GuideItem(
+    name: 'الآيس كريم',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'الآيس كريم المعلب من لبن مبستر عادةً مناسب. الآيس كريم اللي من عربة أو فيه بيض نيء حالة تانية، والأأمن تبعدي عنه.',
+    aliases: ['آيس كريم', 'ايس كريم', 'جيلاتي', 'ice cream'],
+  ),
+  GuideItem(
+    name: 'الزنجبيل',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'الزنجبيل في الأكل أو كوب خفيف بيستخدم أحيانًا مع الغثيان. الكبسولات والكمية العالية من غير الطبيب لأ.',
+    aliases: ['زنجبيل', 'ginger'],
+  ),
+  GuideItem(
+    name: 'اليانسون والكركديه',
+    kind: GuideKind.food,
+    level: SafetyLevel.amber,
+    note: 'كوب خفيف مش زي ما تشربين إبريق كل يوم. الأعشاب المركزة في الحمل ما تتاخدش كعلاج من غير الطبيب.',
+    aliases: ['يانسون', 'كركديه', 'كركدية'],
+  ),
+  GuideItem(
+    name: 'العرقسوس',
+    kind: GuideKind.food,
+    level: SafetyLevel.red,
+    note: 'العرقسوس بكميات كبيرة بيتجنب في الحمل، وخصوصًا لو فيه ضغط. مشروب خفيف مرة مش زي أكل العرقسوس كل يوم.',
+    aliases: ['عرقسوس', 'licorice'],
+  ),
+  GuideItem(
+    name: 'الأسبرين',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.amber,
+    note: 'الأسبرين كمسكن مش اختيار للحامل. في حالات قليلة الطبيب يكتب جرعة صغيرة لغرض معين. ما تبدئيهوش من نفسك.',
+    aliases: ['أسبرين', 'اسبرين', 'aspirin', 'اسبرين اطفال'],
+  ),
+  GuideItem(
+    name: 'المضادات الحيوية',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.amber,
+    note: 'فيه مضادات الأطباء بيستخدموها في الحمل، وفيه مضادات لأ. أموكسيل وأوجمنتين وفلاجيل وغيرهم ما يتاخدوش لأن صاحبته خدتهم. الروشتة تكون باسمكِ ومن طبيبك.',
+    aliases: ['أموكسيل', 'اموكسيل', 'أوجمنتين', 'اوجمنتين', 'فلاجيل', 'مضاد حيوي', 'amoxicillin', 'augmentin', 'flagyl'],
+  ),
+  GuideItem(
+    name: 'أدوية الحموضة',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.amber,
+    note: 'جافيسكون وريني ومالوكس أحيانًا بتستخدم للحموضة، بس النوع والكمية يتأكدوا مع الطبيب أو الصيدلي وأنتِ حامل.',
+    aliases: ['جافيسكون', 'ريني', 'مالوكس', 'gaviscon', 'حموضة'],
+  ),
+  GuideItem(
+    name: 'فيتامين د',
+    kind: GuideKind.vitamin,
+    level: SafetyLevel.amber,
+    note: 'فيتامين د شائع في المتابعة، والجرعة بتبان من التحليل والطبيب. العلبة العامة مش نفس روشتة كل حامل.',
+    aliases: ['فيتامين د', 'vitamin d', 'فيتامين d3'],
+  ),
+  GuideItem(
+    name: 'أدوية البرد المركبة',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.red,
+    note: 'كونجستال وكومتركس وأشباههم خلطات ممكن يبقى فيها مواد غير مناسبة للحمل. البرد يتعالج مع الطبيب، ومش بعلبة من الدرج.',
+    aliases: ['كونجستال', 'كومتركس', 'comtrex', 'congestal', 'ستربسلز'],
+  ),
+  GuideItem(
+    name: 'حبوب منع الحمل',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.red,
+    note: 'لو الدورة اتأخرت أو فيه حمل وانتِ لسه بتاخدي حبوب المنع، وقفيها وكلمي الطبيب. ما كمّليهاش وأنتِ حامل من غير ما حد يشوفك.',
+    aliases: ['حبوب منع', 'منع الحمل', 'حبوب الحمل', 'ياسمين', 'جينيرا'],
+  ),
+  GuideItem(
+    name: 'أدوية التخسيس',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.red,
+    note: 'أدوية التخسيس والكبسولات العشبية للرجيم مش للحمل. توقفيها وكلمي الطبيب، حتى لو كنتي بادياها قبل ما تعرفي.',
+    aliases: ['تخسيس', 'رجيم', 'حرق دهون'],
+  ),
+  GuideItem(
+    name: 'أدوية الغثيان والمغص',
+    kind: GuideKind.medicine,
+    level: SafetyLevel.amber,
+    note: 'بسكوبان وموتيليوم وأدوية الغثيان ليها حالات تتاخد فيها وحالات لأ. الغثيان الشديد نفسه يستاهل مكالمة الطبيب، مش تجربة علب.',
+    aliases: ['بسكوبان', 'موتيليوم', 'دوسباتالين', 'غثيان', 'buscopan'],
+  ),
+];
+
+const scanPool = [...guideItems, ...extraScanItems];
+
+const foodScanKinds = {GuideKind.food, GuideKind.herb};
+const medicineScanKinds = {GuideKind.medicine, GuideKind.vitamin};
+
+const foodSuggestions = ['كبدة', 'مانجا', 'قهوة', 'بيض', 'سوشي', 'فراخ', 'تونة', 'جبنة'];
+const medicineSuggestions = ['بنادول', 'بروفين', 'فوليك', 'حديد', 'رواكوتان', 'أسبرين'];
