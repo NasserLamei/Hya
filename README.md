@@ -24,24 +24,6 @@ Xcode موجود على الجهاز، فبناء iOS بيشتغل من هنا. 
 ## ربط Supabase
 
 1. اعملي مشروع على [supabase.com](https://supabase.com).
-2. من SQL Editor، شغّلي `supabase/schema.sql`.
-3. من Authentication، فعّلي الإيميل. للتطوير السريع، اقفلي Confirm email عشان الدخول يحصل من غير رسالة.
-4. انسخي Project URL و anon key في ملف `env.json` جنب `pubspec.yaml` (النسخة الفاضية في `env.example.json`). الملف ده متتجاهل من جيت.
-
-```json
-{
-  "SUPABASE_URL": "https://YOUR_PROJECT.supabase.co",
-  "SUPABASE_ANON_KEY": "YOUR_ANON_KEY"
-}
-```
-
-5. شغّلي:
-
-```bash
-flutter run --dart-define-from-file=env.json
-```
-
-من غير الملف، التطبيق يشتغل بالكامل على الموبايل. الحساب من الإعدادات بيحفظ البروفايل واليوميات والكبسولة وسجل البيبي.
 
 ## اللي موجود
 
