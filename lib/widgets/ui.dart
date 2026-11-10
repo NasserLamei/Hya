@@ -754,6 +754,63 @@ class SectionLabel extends StatelessWidget {
   }
 }
 
+/// Empty state موحّد بهوية هي: صورة + عنوان + تفاصيل.
+class HyaEmptyView extends StatelessWidget {
+  const HyaEmptyView({
+    super.key,
+    required this.title,
+    required this.body,
+    this.icon = Icons.favorite_rounded,
+  });
+
+  final String title;
+  final String body;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return HyaCard(
+      padding: const EdgeInsets.fromLTRB(22, 28, 22, 26),
+      child: Column(
+        children: [
+          Container(
+            width: 92,
+            height: 92,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: HyaColors.rose.withValues(alpha: 0.22),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: const ClipOval(
+              child: Image(
+                image: AssetImage('assets/icon/app_icon.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Icon(icon, color: HyaColors.rose, size: 22),
+          const SizedBox(height: 10),
+          HyaText(title, size: 18, weight: 760, align: TextAlign.center),
+          const SizedBox(height: 8),
+          HyaText(
+            body,
+            size: 13.5,
+            color: HyaColors.muted,
+            align: TextAlign.center,
+            height: 1.55,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class HyaNavBar extends StatelessWidget {
   const HyaNavBar({
     super.key,

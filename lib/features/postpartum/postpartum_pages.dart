@@ -137,7 +137,11 @@ class BabyLogPage extends StatelessWidget {
         const HyaText('تسجيل سريع عشان الليل ما يبهدلش الذاكرة. مش جدول رضاعة إجباري.', color: HyaColors.muted),
         const SizedBox(height: 14),
         if (entries.isEmpty)
-          const HyaCard(child: HyaText('لسه مفيش حاجة متسجلة النهاردة. الأزرار في الصفحة الأولى.'))
+          const HyaEmptyView(
+            icon: Icons.child_care_rounded,
+            title: 'مفيش تسجيل النهاردة',
+            body: 'من الصفحة الأولى تقدري تسجّلي رضاعة أو حفاضة بسرعة. السجل هنا عشان الذاكرة، مش جدول إجباري.',
+          )
         else
           for (final entry in entries) ...[
             HyaCard(

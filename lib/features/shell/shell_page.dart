@@ -22,6 +22,7 @@ class ShellPage extends StatefulWidget {
 
 class _ShellPageState extends State<ShellPage> {
   var _index = 0;
+  final _mythsKey = GlobalKey<MythsPageState>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +41,23 @@ class _ShellPageState extends State<ShellPage> {
         backgroundColor: Colors.transparent,
         body: Column(
           children: [
-            Expanded(child: tabs[current].page),
+            Expanded(
+              child: IndexedStack(
+                index: current,
+                children: [for (final tab in tabs) tab.page],
+              ),
+            ),
             HyaNavBar(
               index: current,
               accent: accent,
               items: [for (final tab in tabs) (tab.icon, tab.label)],
-              onChanged: (value) => setState(() => _index = value),
+              onChanged: (value) {
+                final mythsIndex = tabs.indexWhere((tab) => tab.isMyths);
+                setState(() => _index = value);
+                if (mythsIndex == value) {
+                  _mythsKey.currentState?.refreshFromTab();
+                }
+              },
             ),
           ],
         ),
@@ -55,17 +67,17 @@ class _ShellPageState extends State<ShellPage> {
 
   List<_Tab> _tabs(LifeMode mode) {
     return switch (mode) {
-      LifeMode.ttc => const [
-          _Tab('اليوم', Icons.spa_rounded, TtcHomePage()),
-          _Tab('الاستعداد', Icons.favorite_rounded, TtcPrepPage()),
-          _Tab('الدورة', Icons.calendar_month_rounded, CyclePage()),
-          _Tab('الحكاوي', Icons.forum_rounded, MythsPage()),
+      LifeMode.ttc => [
+          const _Tab('اليوم', Icons.spa_rounded, TtcHomePage()),
+          const _Tab('الاستعداد', Icons.favorite_rounded, TtcPrepPage()),
+          const _Tab('الدورة', Icons.calendar_month_rounded, CyclePage()),
+          _Tab('الحكاوي', Icons.forum_rounded, MythsPage(key: _mythsKey), isMyths: true),
         ],
-      LifeMode.pregnant => const [
-          _Tab('الرحلة', Icons.auto_awesome_rounded, PregnantHomePage()),
-          _Tab('الدرع', Icons.health_and_safety_rounded, MedicalPage()),
-          _Tab('الحكاوي', Icons.forum_rounded, MythsPage()),
-          _Tab('الحقيبة', Icons.luggage_rounded, HospitalPage()),
+      LifeMode.pregnant => [
+          const _Tab('الرحلة', Icons.auto_awesome_rounded, PregnantHomePage()),
+          const _Tab('دليلي', Icons.health_and_safety_rounded, MedicalPage()),
+          _Tab('الحكاوي', Icons.forum_rounded, MythsPage(key: _mythsKey), isMyths: true),
+          const _Tab('الحقيبة', Icons.luggage_rounded, HospitalPage()),
         ],
       LifeMode.postpartum => const [
           _Tab('اليوم', Icons.child_care_rounded, PostpartumHomePage()),
@@ -78,11 +90,12 @@ class _ShellPageState extends State<ShellPage> {
 }
 
 class _Tab {
-  const _Tab(this.label, this.icon, this.page);
+  const _Tab(this.label, this.icon, this.page, {this.isMyths = false});
 
   final String label;
   final IconData icon;
   final Widget page;
+  final bool isMyths;
 }
 
 void openSettings(BuildContext context) {

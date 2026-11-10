@@ -411,7 +411,7 @@ class _WelcomeStep extends StatelessWidget {
           SizedBox(height: 22),
           _FeatureRow(icon: Icons.auto_awesome_rounded, text: 'رحلة أسبوع بأسبوع'),
           SizedBox(height: 10),
-          _FeatureRow(icon: Icons.health_and_safety_rounded, text: 'درع للأكل والدوا'),
+          _FeatureRow(icon: Icons.health_and_safety_rounded, text: 'دليلي للأكل والدوا'),
           SizedBox(height: 10),
           _FeatureRow(icon: Icons.forum_rounded, text: 'حكاوي وخرافات بهدوء'),
         ],
@@ -490,7 +490,7 @@ class _ModeStep extends StatelessWidget {
           _ModeCard(
             icon: Icons.pregnant_woman_rounded,
             title: 'أنا حامل',
-            body: 'أسبوع الحمل، رسالة البيبي، الدرع الطبي، وحقيبة المستشفى.',
+            body: 'أسبوع الحمل، رسالة البيبي، دليلي، وحقيبة المستشفى.',
             color: HyaColors.blush,
             accent: HyaColors.rose,
             selected: mode == LifeMode.pregnant,

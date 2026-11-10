@@ -355,7 +355,9 @@ class CommunityStory {
     required this.body,
     required this.topic,
     this.pregnancyWeek,
+    this.pregnancyNumber,
     this.motherAge,
+    this.showName = false,
     required this.isPublic,
     required this.createdAt,
   });
@@ -367,9 +369,23 @@ class CommunityStory {
   final String body;
   final String topic;
   final int? pregnancyWeek;
+  /// رقم الحمل: ١ = بكر، ٢ = تاني حمل…
+  final int? pregnancyNumber;
   final int? motherAge;
+  final bool showName;
   final bool isPublic;
   final DateTime createdAt;
+
+  /// الاسم الظاهر للخصوصية: إما الاسم أو «ماما».
+  String get publicLabel => showName && displayName.trim().isNotEmpty ? displayName.trim() : 'ماما';
+
+  String get pregnancyNumberLabel {
+    final n = pregnancyNumber;
+    if (n == null) return '';
+    if (n <= 1) return 'بكر (أول حمل)';
+    if (n == 2) return 'تاني حمل';
+    return 'الحمل رقم $n';
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -379,7 +395,9 @@ class CommunityStory {
         'body': body,
         'topic': topic,
         'pregnancyWeek': pregnancyWeek,
+        'pregnancyNumber': pregnancyNumber,
         'motherAge': motherAge,
+        'showName': showName,
         'isPublic': isPublic,
         'createdAt': createdAt.toUtc().toIso8601String(),
       };
@@ -393,7 +411,9 @@ class CommunityStory {
       body: (json['body'] as String?) ?? '',
       topic: (json['topic'] as String?) ?? 'حمل',
       pregnancyWeek: (json['pregnancyWeek'] as num?)?.toInt(),
+      pregnancyNumber: (json['pregnancyNumber'] as num?)?.toInt(),
       motherAge: (json['motherAge'] as num?)?.toInt(),
+      showName: json['showName'] as bool? ?? false,
       isPublic: json['isPublic'] as bool? ?? true,
       createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
     );

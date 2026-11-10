@@ -126,13 +126,17 @@ create table if not exists public.community_stories (
   body text not null,
   topic text not null default 'حمل',
   pregnancy_week int check (pregnancy_week is null or (pregnancy_week between 1 and 45)),
+  pregnancy_number int check (pregnancy_number is null or (pregnancy_number between 1 and 20)),
   mother_age int check (mother_age is null or (mother_age between 14 and 60)),
+  show_name boolean not null default false,
   is_public boolean not null default true,
   created_at timestamptz not null default now()
 );
 
 alter table public.community_stories add column if not exists pregnancy_week int;
+alter table public.community_stories add column if not exists pregnancy_number int;
 alter table public.community_stories add column if not exists mother_age int;
+alter table public.community_stories add column if not exists show_name boolean not null default false;
 
 create index if not exists community_stories_public_created_idx
   on public.community_stories (created_at desc)

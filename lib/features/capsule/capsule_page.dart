@@ -41,8 +41,10 @@ class CapsulePage extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           if (notes.isEmpty)
-            const HyaCard(
-              child: HyaText('لسه مفيش رسائل. أول رسالة ممكن تكون جملة واحدة عن النهاردة.'),
+            const HyaEmptyView(
+              icon: Icons.mail_outline_rounded,
+              title: 'مفيش رسائل لسه',
+              body: 'اكتبي رسالة صغيرة للبيبي عن النهاردة، واختاريلها يوم تفتح فيه. هي بتحتفظ بيها بهدوء لحد المعاد.',
             )
           else
             for (final note in notes) ...[

@@ -177,12 +177,15 @@ class AppStore extends ChangeNotifier {
     required String body,
     required String topic,
     required int pregnancyWeek,
+    required int pregnancyNumber,
+    bool showName = false,
     bool isPublic = true,
   }) async {
     final trimmedTitle = title.trim();
     final trimmedBody = body.trim();
     if (trimmedBody.length < 8) return 'اكتبي التجربة بجملتين على الأقل.';
-    if (pregnancyWeek < 1 || pregnancyWeek > 45) return 'اختاري أسبوع الحمل من ١ لـ ٤٥.';
+    if (pregnancyWeek < 1 || pregnancyWeek > 45) return 'اكتبي الأسبوع الكام (من ١ لـ ٤٥).';
+    if (pregnancyNumber < 1 || pregnancyNumber > 20) return 'اكتبي الحمل رقم كام (١ = بكر).';
     if (profile?.motherAge == null) {
       return 'كمّلي سنكِ من الحساب أو بياناتك قبل ما تنشري التجربة.';
     }
@@ -198,7 +201,9 @@ class AppStore extends ChangeNotifier {
       body: trimmedBody,
       topic: topic.trim().isEmpty ? 'حمل' : topic.trim(),
       pregnancyWeek: pregnancyWeek,
+      pregnancyNumber: pregnancyNumber,
       motherAge: profile!.motherAge,
+      showName: showName,
       isPublic: isPublic,
       createdAt: DateTime.now(),
     );

@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'cycle_math.dart';
 import 'models.dart';
-import 'safety.dart';
 
 class AuthOutcome {
   const AuthOutcome({required this.ok, required this.message});
@@ -282,23 +281,36 @@ class RemoteSync {
     });
   }
 
-  static Future<List<CommunityStory>> fetchPublicStories({String query = ''}) async {
+  static Future<List<CommunityStory>> fetchPublicStories({
+    String query = '',
+    int limit = 10,
+    int offset = 0,
+    String? excludeUserId,
+  }) async {
     if (!ready) return const [];
-    var request = _client
-        .from('community_stories')
-        .select()
-        .eq('is_public', true)
+    final safeLimit = limit < 1 ? 10 : limit;
+    final safeOffset = offset < 0 ? 0 : offset;
+    var filtered = _client.from('community_stories').select().eq('is_public', true);
+    if (excludeUserId != null && excludeUserId.isNotEmpty) {
+      filtered = filtered.neq('user_id', excludeUserId);
+    }
+    final needle = query.trim();
+    if (needle.isNotEmpty) {
+      final escaped = needle
+          .replaceAll(r'\', r'\\')
+          .replaceAll('%', r'\%')
+          .replaceAll('_', r'\_')
+          .replaceAll(',', ' ');
+      final pattern = '%$escaped%';
+      filtered = filtered.or(
+        'title.ilike."$pattern",body.ilike."$pattern",topic.ilike."$pattern",display_name.ilike."$pattern"',
+      );
+    }
+    final rows = await filtered
         .order('created_at', ascending: false)
-        .limit(80);
-    final rows = await request;
-    final stories = [
-      for (final row in rows as List) _storyFromRow(row as Map),
-    ];
-    final needle = normalizeArabic(query);
-    if (needle.isEmpty) return stories;
+        .range(safeOffset, safeOffset + safeLimit - 1);
     return [
-      for (final story in stories)
-        if (normalizeArabic('${story.title} ${story.body} ${story.topic} ${story.displayName}').contains(needle)) story,
+      for (final row in rows as List) _storyFromRow(row as Map),
     ];
   }
 
@@ -326,7 +338,9 @@ class RemoteSync {
       'body': story.body,
       'topic': story.topic,
       'pregnancy_week': story.pregnancyWeek,
+      'pregnancy_number': story.pregnancyNumber,
       'mother_age': story.motherAge,
+      'show_name': story.showName,
       'is_public': story.isPublic,
       'created_at': story.createdAt.toUtc().toIso8601String(),
     });
@@ -347,7 +361,9 @@ class RemoteSync {
       body: (row['body'] as String?) ?? '',
       topic: (row['topic'] as String?) ?? 'حمل',
       pregnancyWeek: (row['pregnancy_week'] as num?)?.toInt(),
+      pregnancyNumber: (row['pregnancy_number'] as num?)?.toInt(),
       motherAge: (row['mother_age'] as num?)?.toInt(),
+      showName: row['show_name'] as bool? ?? false,
       isPublic: row['is_public'] as bool? ?? true,
       createdAt: DateTime.tryParse(row['created_at'] as String? ?? '')?.toLocal() ?? DateTime.now(),
     );
