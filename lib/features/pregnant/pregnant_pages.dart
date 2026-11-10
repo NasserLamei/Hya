@@ -30,16 +30,7 @@ class PregnantHomePage extends StatelessWidget {
         HomeGreeting(
           greeting: greetingFor(today),
           name: profile.name,
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              HyaCameraButton(onPressed: () => openScanner(context)),
-              IconButton(
-                onPressed: () => openSettings(context),
-                icon: const Icon(Icons.tune_rounded),
-              ),
-            ],
-          ),
+          trailing: HyaCameraButton(onPressed: () => openScanner(context)),
         ),
         const SizedBox(height: 8),
         _WeekJourney(

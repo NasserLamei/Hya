@@ -5,8 +5,8 @@ import '../../core/models.dart';
 import '../../core/theme.dart';
 import '../../widgets/ui.dart';
 import '../capsule/capsule_page.dart';
-import '../hospital/hospital_page.dart';
 import '../medical/medical_page.dart';
+import '../more/more_page.dart';
 import '../myths/myths_page.dart';
 import '../postpartum/postpartum_pages.dart';
 import '../pregnant/pregnant_pages.dart';
@@ -77,7 +77,7 @@ class _ShellPageState extends State<ShellPage> {
           const _Tab('الرحلة', Icons.auto_awesome_rounded, PregnantHomePage()),
           const _Tab('دليلي', Icons.health_and_safety_rounded, MedicalPage()),
           _Tab('الحكاوي', Icons.forum_rounded, MythsPage(key: _mythsKey), isMyths: true),
-          const _Tab('الحقيبة', Icons.luggage_rounded, HospitalPage()),
+          const _Tab('المزيد', Icons.apps_rounded, MorePage()),
         ],
       LifeMode.postpartum => const [
           _Tab('اليوم', Icons.child_care_rounded, PostpartumHomePage()),

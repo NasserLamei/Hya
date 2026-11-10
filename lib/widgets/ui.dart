@@ -118,14 +118,20 @@ class HyaForwardArrow extends StatelessWidget {
 
 /// شيفرون فتح الصفوف في الواجهة العربية.
 class HyaTrailingChevron extends StatelessWidget {
-  const HyaTrailingChevron({super.key, this.size = 22, this.color = HyaColors.muted});
+  const HyaTrailingChevron({super.key, this.size = 18, this.color = HyaColors.muted});
 
   final double size;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Icon(Icons.chevron_left_rounded, size: size, color: color);
+    // ثابت لليسار: في العربية السهم الأمامي للدخول للصفحة بيوجّه شمال.
+    return Icon(
+      Icons.chevron_left_rounded,
+      size: size,
+      color: color,
+      matchTextDirection: false,
+    );
   }
 }
 

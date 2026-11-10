@@ -17,60 +17,78 @@ class HospitalPage extends StatelessWidget {
       if (!sections.contains(item.section)) sections.add(item.section);
     }
 
-    return SoftPage(
-      children: [
-        const PageHeader(kicker: 'من غير ما النسيان يوسوسك', title: 'الحقيبة'),
-        const SizedBox(height: 8),
-        HyaCard(
-          color: HyaColors.blush,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HyaText('$done من ${hospitalBag.length}', size: 28, weight: 760),
-              const SizedBox(height: 6),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(99),
-                child: LinearProgressIndicator(
-                  minHeight: 8,
-                  value: hospitalBag.isEmpty ? 0 : done / hospitalBag.length,
-                  backgroundColor: Colors.white,
-                  color: HyaColors.rose,
-                ),
-              ),
-            ],
-          ),
+    return HyaBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          title: const HyaText('الحقيبة', weight: 720, size: 18),
         ),
-        const SizedBox(height: 8),
-        const HyaText(
-          'القائمة اقتراح. المستشفى أحيانًا بتطلب حاجات زيادة أو بتوفّر حاجات. اتبعي الورقة بتاعتهم لو اختلفت.',
-          size: 13,
-          color: HyaColors.muted,
-        ),
-        const SizedBox(height: 14),
-        for (final section in sections) ...[
-          SectionLabel(section),
-          const SizedBox(height: 8),
-          for (final item in hospitalBag.where((entry) => entry.section == section))
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: HyaCard(
-                onTap: () => store.toggleHospital(item.id),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                child: Row(
-                  children: [
-                    Icon(
-                      store.hospitalChecks.contains(item.id) ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+          children: [
+            const HyaText(
+              'من غير ما النسيان يوسوسك',
+              size: 13,
+              weight: 600,
+              color: HyaColors.muted,
+            ),
+            const SizedBox(height: 12),
+            HyaCard(
+              color: HyaColors.blush,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  HyaText('$done من ${hospitalBag.length}', size: 28, weight: 760),
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(
+                      minHeight: 8,
+                      value: hospitalBag.isEmpty ? 0 : done / hospitalBag.length,
+                      backgroundColor: Colors.white,
                       color: HyaColors.rose,
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(child: HyaText(item.label, weight: 620)),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          const SizedBox(height: 8),
-        ],
-      ],
+            const SizedBox(height: 8),
+            const HyaText(
+              'القائمة اقتراح. المستشفى أحيانًا بتطلب حاجات زيادة أو بتوفّر حاجات. اتبعي الورقة بتاعتهم لو اختلفت.',
+              size: 13,
+              color: HyaColors.muted,
+            ),
+            const SizedBox(height: 14),
+            for (final section in sections) ...[
+              SectionLabel(section),
+              const SizedBox(height: 8),
+              for (final item in hospitalBag.where((entry) => entry.section == section))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: HyaCard(
+                    onTap: () => store.toggleHospital(item.id),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    child: Row(
+                      children: [
+                        Icon(
+                          store.hospitalChecks.contains(item.id)
+                              ? Icons.check_box_rounded
+                              : Icons.check_box_outline_blank_rounded,
+                          color: HyaColors.rose,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(child: HyaText(item.label, weight: 620)),
+                      ],
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 8),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
