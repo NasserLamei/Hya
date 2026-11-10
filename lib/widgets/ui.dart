@@ -811,7 +811,7 @@ class HyaEmptyView extends StatelessWidget {
   }
 }
 
-class HyaNavBar extends StatelessWidget {
+class HyaNavBar extends StatefulWidget {
   const HyaNavBar({
     super.key,
     required this.index,
@@ -826,40 +826,309 @@ class HyaNavBar extends StatelessWidget {
   final ValueChanged<int> onChanged;
 
   @override
+  State<HyaNavBar> createState() => _HyaNavBarState();
+}
+
+class _HyaNavBarState extends State<HyaNavBar> with SingleTickerProviderStateMixin {
+  late final AnimationController _travel;
+  var _fromSlot = 0.0;
+  var _toSlot = 0.0;
+  var _slotsReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _travel = AnimationController(vsync: this, duration: const Duration(milliseconds: 460))..value = 1;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_slotsReady) {
+      _toSlot = _slotFor(widget.index, widget.items.length);
+      _fromSlot = _toSlot;
+      _slotsReady = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HyaNavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index || oldWidget.items.length != widget.items.length) {
+      _fromSlot = _slotFor(oldWidget.index, oldWidget.items.length);
+      _toSlot = _slotFor(widget.index, widget.items.length);
+      _travel.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _travel.dispose();
+    super.dispose();
+  }
+
+  double _slotFor(int index, int count) {
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final safe = index.clamp(0, count - 1);
+    return (rtl ? (count - 1 - safe) : safe).toDouble();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.paddingOf(context).bottom;
-    return Container(
-      padding: EdgeInsets.fromLTRB(8, 8, 8, bottom + 8),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: HyaColors.line)),
-      ),
-      child: Row(
-        children: [
-          for (var i = 0; i < items.length; i++)
-            Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: () => onChanged(i),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(items[i].$1, size: 22, color: i == index ? accent : HyaColors.muted),
-                      const SizedBox(height: 2),
-                      HyaText(
-                        items[i].$2,
-                        size: 11,
-                        weight: i == index ? 700 : 500,
-                        color: i == index ? accent : HyaColors.muted,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+    final accent = widget.accent;
+    final soft = Color.lerp(accent, Colors.white, 0.86) ?? HyaColors.blush;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(14, 4, 14, (bottom > 0 ? bottom : 10) + 4),
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFCFB),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: HyaColors.blush.withValues(alpha: 0.95)),
+          boxShadow: [
+            BoxShadow(
+              color: accent.withValues(alpha: 0.16),
+              blurRadius: 22,
+              offset: const Offset(0, 10),
             ),
-        ],
+            BoxShadow(
+              color: HyaColors.ink.withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final count = widget.items.length;
+            final itemW = constraints.maxWidth / count;
+
+            return AnimatedBuilder(
+              animation: _travel,
+              builder: (context, child) {
+                final raw = _travel.value.clamp(0.0, 1.0);
+                final t = Curves.easeOutCubic.transform(raw);
+                final bounce = Curves.easeOutBack.transform(raw).clamp(0.85, 1.12);
+                final slot = _fromSlot + (_toSlot - _fromSlot) * t;
+                final stretch = (1 - (2 * (raw - 0.5).abs())).clamp(0.0, 1.0);
+                final width = (itemW * (1 + stretch * 0.14) * bounce).clamp(itemW * 0.9, itemW * 1.28);
+                final left = (slot * itemW - (width - itemW) / 2)
+                    .clamp(0.0, (constraints.maxWidth - width).clamp(0.0, constraints.maxWidth));
+
+                return Stack(
+                  children: [
+                    Positioned(
+                      left: left,
+                      top: 0,
+                      bottom: 0,
+                      width: width,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [soft, accent.withValues(alpha: 0.16 + stretch * 0.08)],
+                            ),
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(color: accent.withValues(alpha: 0.18 + stretch * 0.1)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: accent.withValues(alpha: 0.12 + stretch * 0.16),
+                                blurRadius: 10 + stretch * 10,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    child!,
+                  ],
+                );
+              },
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.items.length; i++)
+                    Expanded(
+                      child: _HyaNavItem(
+                        icon: widget.items[i].$1,
+                        label: widget.items[i].$2,
+                        selected: i == widget.index,
+                        accent: accent,
+                        onTap: () => widget.onChanged(i),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _HyaNavItem extends StatefulWidget {
+  const _HyaNavItem({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.accent,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final Color accent;
+  final VoidCallback onTap;
+
+  @override
+  State<_HyaNavItem> createState() => _HyaNavItemState();
+}
+
+class _HyaNavItemState extends State<_HyaNavItem> with TickerProviderStateMixin {
+  late final AnimationController _pop;
+  late final AnimationController _pulse;
+
+  @override
+  void initState() {
+    super.initState();
+    _pop = AnimationController(vsync: this, duration: const Duration(milliseconds: 420));
+    _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400));
+    if (widget.selected) {
+      _pop.value = 1;
+      _pulse.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _HyaNavItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selected && !oldWidget.selected) {
+      _pop.forward(from: 0);
+      _pulse.repeat(reverse: true);
+    } else if (!widget.selected && oldWidget.selected) {
+      _pop.reverse();
+      _pulse
+        ..stop()
+        ..value = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pop.dispose();
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = widget.selected;
+    final accent = widget.accent;
+    final color = selected ? accent : HyaColors.muted;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: widget.onTap,
+        splashColor: accent.withValues(alpha: 0.12),
+        highlightColor: accent.withValues(alpha: 0.06),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_pop, _pulse]),
+            builder: (context, _) {
+              final raw = _pop.value.clamp(0.0, 1.0);
+              final popT = Curves.easeOutCubic.transform(raw);
+              final bounce = Curves.easeOutBack.transform(raw).clamp(0.9, 1.18);
+              final pulse = selected ? (0.5 - (_pulse.value - 0.5).abs()) * 2 : 0.0;
+              final scale = ((selected ? 1.02 : 0.97) + popT * 0.08 + pulse * 0.04) * (selected ? bounce / 1.05 : 1);
+              final tilt = (1 - popT) * 0.1 * (selected ? -1 : 1);
+              final labelOpacity = (0.55 + popT * 0.45).clamp(0.0, 1.0);
+              final underline = (0.2 + popT * 0.8).clamp(0.0, 1.0);
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.rotate(
+                    angle: tilt,
+                    child: Transform.scale(
+                      scale: scale.clamp(0.9, 1.2),
+                      child: Container(
+                        width: 36,
+                        height: 30,
+                        alignment: Alignment.center,
+                        decoration: selected
+                            ? BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: accent.withValues(alpha: (0.16 + pulse * 0.18).clamp(0.0, 1.0)),
+                                    blurRadius: 8 + pulse * 10,
+                                    spreadRadius: pulse * 1.5,
+                                  ),
+                                ],
+                              )
+                            : null,
+                        child: Icon(
+                          widget.icon,
+                          size: selected ? 23.5 : 20.5,
+                          color: color,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Opacity(
+                    opacity: labelOpacity,
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - popT) * 5),
+                      child: Text(
+                        widget.label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: HyaType.style(
+                          size: selected ? 11.2 : 10.8,
+                          weight: selected ? 760 : 520,
+                          color: color,
+                          height: 1.15,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Transform.scale(
+                    scaleX: underline,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 16,
+                      height: 3,
+                      decoration: BoxDecoration(
+                        color: accent.withValues(alpha: selected ? 1 : 0),
+                        borderRadius: BorderRadius.circular(3),
+                        boxShadow: selected
+                            ? [
+                                BoxShadow(
+                                  color: accent.withValues(alpha: (0.35 + pulse * 0.25).clamp(0.0, 1.0)),
+                                  blurRadius: 6,
+                                ),
+                              ]
+                            : null,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
